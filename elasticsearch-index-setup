@@ -1,0 +1,47 @@
+GET _search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+GET sensordata/_search
+{
+  "query": {
+    "match_all": {
+      
+    }
+  }
+}
+
+
+GET sensordata/_mapping
+
+
+POST sensordata/readings
+{
+  "deviceParameter": "Temperature", 
+  "@timestamp": 1537184240000, 
+  "deviceValue": 16, 
+  "deviceId": "SBS04"
+}
+ 
+DELETE sensordata/readings
+
+
+PUT  sensordata
+{
+  "mappings":  {
+    "readings" : {
+      "properties":{
+        "deviceParameter": {"type" : "keyword"},
+        "deviceValue" : {"type": "float"},
+        "deviceId" : {"type" : "keyword"},
+        "@timestamp": {
+          "type" : "date", 
+          "format" : "epoch_millis"
+        }
+      }
+    }
+  }
+}
