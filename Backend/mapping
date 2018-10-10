@@ -26,8 +26,14 @@ POST sensordata/readings
   "deviceId": "SBS04"
 }
  
-DELETE sensordata/readings
-
+POST sensordata/readings/_delete_by_query
+{
+  "query": {
+    "match_all": {
+      
+    }
+  }
+}
 
 PUT  sensordata
 {
@@ -45,3 +51,4 @@ PUT  sensordata
     }
   }
 }
+
