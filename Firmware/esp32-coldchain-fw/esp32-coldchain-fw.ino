@@ -23,7 +23,7 @@ NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3600, 60000);
 const char* mqtt_server = "172.20.10.3";
 
 const char* deviceID = "SeeCat02";
-const char* sensorDataTopic = "SeeCat02/sensorData";
+const char* sensorDataTopic = "deviceID/SeeCat02/sensorData";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
