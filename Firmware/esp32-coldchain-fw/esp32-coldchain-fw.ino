@@ -8,15 +8,19 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
+//#define MYWATCHDOG 1
+
 Adafruit_BME680 bme; // I2C
 
+#ifdef MYWATCHDOG
 WiFiUDP ntpUDP;
 //NTPClient timeClient(ntpUDP);
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3600, 60000);
+#endif
 
 //const char* ssid = "AP_ID";
 //const char* password =  "passwd";
-const char* mqtt_server = "192.168.1.20";
+const char* mqtt_server = "172.20.10.3";
 
 const char* deviceID = "SeeCat02";
 const char* sensorDataTopic = "SeeCat02/sensorData";
@@ -62,7 +66,7 @@ void connectToNetwork() {
   //   the fully-qualified domain name is "esp8266.local"
   // - second argument is the IP address to advertise
   //   we send our IP address on the WiFi network
-  if (!MDNS.begin("seecat01")) {
+  if (!MDNS.begin(deviceID)) {
       Serial.println("Error setting up MDNS responder!");
       while(1) {
           delay(1000);
@@ -77,8 +81,10 @@ void setup() {
     connectToNetwork();
   Serial.println(WiFi.macAddress());
   Serial.println(WiFi.localIP());
-  
+
+#ifdef MYWATCHDOG
   timeClient.begin();
+#endif
    
   ArduinoOTA.setHostname(deviceID);
   ArduinoOTA.setPassword("esp32");
@@ -130,7 +136,7 @@ void reconnect() {
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
-    if (client.connect("SeeCat01")) {
+    if (client.connect(deviceID)) {
       Serial.println("connected");
       // Once connected, publish an announcement...
       //client.publish("outTopic", "hello world");
@@ -147,10 +153,11 @@ void reconnect() {
 }
 
 void loop() {
-  
-  timeClient.update();
 
+#ifdef MYWATCHDOG 
+  timeClient.update();
   Serial.println(timeClient.getFormattedTime());
+#endif
 
   ArduinoOTA.handle();
   if (! bme.performReading()) {
