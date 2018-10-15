@@ -35,6 +35,7 @@ class SensorDataDate(Resource):
 		sid = res['_scroll_id'];
 		scroll_size = res['hits']['total']
 		print(res['hits']['total'])
+		final_obj += res['hits']['hits'];
 		# Start scrolling
 		while (scroll_size > 0):
 			print ("Scrolling...")
