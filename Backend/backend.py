@@ -31,17 +31,21 @@ class SensorDataDate(Resource):
 		etimestamp=edate.strftime('%s');
 		print(int(stimestamp)*1000);
 		print(int(etimestamp)*1000);
-		res=es.search(index='sensordata',body={ "sort" : [ { "@timestamp" : {"order" : "asc"} } ],'size' : 1000, 'from' : 0, 'query':{ 'range':{ "@timestamp" : { "gte": int(stimestamp)*1000, "lte": int(etimestamp)*1000 }} }})
+		res = es.search(index='sensordata', doc_type='readings', scroll='2m', body={ "sort" : [ { "@timestamp" : {"order" : "asc"} } ],'size' : 1000, 'query':{ 'range':{ "@timestamp" : { "gte": int(stimestamp)*1000, "lte": int(etimestamp)*1000 }} }})
+		sid = res['_scroll_id'];
+		scroll_size = res['hits']['total']
 		print(res['hits']['total'])
-		nr_req = int(res['hits']['total']) / 1000;
-		modulo = int(res['hits']['total']) % 1000;
-		if modulo > 0:
-			nr_req=nr_req+1;
-		print(int(nr_req));
-		for counter in range(0, int(nr_req)):
-			print(counter*1000)
-			res=es.search(index='sensordata',body={ "sort" : [ { "@timestamp" : {"order" : "asc"} } ],'size' : 1000, 'from' : 1000*counter, 'query':{ 'range':{ "@timestamp" : { "gte": int(stimestamp)*1000, "lte": int(etimestamp)*1000 }} }})
+		# Start scrolling
+		while (scroll_size > 0):
+			print ("Scrolling...")
+			res = es.scroll(scroll_id = sid, scroll = '2m')
+			# Update the scroll ID
+			sid = res['_scroll_id']
+			# Get the number of results that we returned in the last scroll
+			scroll_size = len(res['hits']['hits'])
+			print("scroll size: " + str(scroll_size))
 			final_obj += res['hits']['hits'];
+			# Do something with the obtained page
 		print(len(final_obj))
 		return final_obj
 
