@@ -23,15 +23,15 @@ class SensorData(Resource):
 class SensorDataDate(Resource):
 	def get(self, start_date, end_date):
 		final_obj=[]
-		print(start_date);
+		"""print(start_date);
 		print(end_date);
 		sdate=dp.parse(start_date);
 		edate=dp.parse(end_date);
 		stimestamp=sdate.strftime('%s');
 		etimestamp=edate.strftime('%s');
 		print(int(stimestamp)*1000);
-		print(int(etimestamp)*1000);
-		res = es.search(index='sensordata', doc_type='readings', scroll='2m', body={ "sort" : [ { "@timestamp" : {"order" : "asc"} } ],'size' : 1000, 'query':{ 'range':{ "@timestamp" : { "gte": int(stimestamp)*1000, "lte": int(etimestamp)*1000 }} }})
+		print(int(etimestamp)*1000);"""
+		res = es.search(index='sensordata', doc_type='readings', scroll='2m', body={ "sort" : [ { "@timestamp" : {"order" : "asc"} } ],'size' : 1000, 'query':{ 'range':{ "@timestamp" : { "gte": int(start_date)*1000, "lte": int(end_date)*1000 }} }})
 		sid = res['_scroll_id'];
 		scroll_size = res['hits']['total']
 		print(res['hits']['total'])
