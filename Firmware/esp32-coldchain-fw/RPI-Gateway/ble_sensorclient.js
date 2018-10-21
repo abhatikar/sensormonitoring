@@ -1,8 +1,11 @@
 var noble = require('noble');
+const mqtt = require ('mqtt');
+var client  = mqtt.connect('mqtt://localhost');
 
 const peripheralAdress = "30:ae:a4:20:14:aa";
 //If name filtering is required
 const peripheralName = "SeeCat03";
+const char* sensorDataTopic = "deviceID/SeeCat03/sensorData";
 
 noble.on('stateChange', function (state) {
   console.log('on -> stateChange: ' + state);
@@ -40,7 +43,8 @@ noble.on('discover', function(peripheral) {
         console.log('discovered sensor value characteristic');
 
         batteryLevelCharacteristic.on('data', function(data, isNotification) {
-	 console.log(data.toString('utf8'));
+		console.log(data.toString('utf8'));
+		client.publish(sensorDataTopic, data.toString('utf8'));
         });
 
         // to enable notify
