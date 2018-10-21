@@ -1,6 +1,29 @@
 var noble = require('noble');
 const mqtt = require ('mqtt');
-var client  = mqtt.connect('mqtt://localhost');
+var fs = require('fs');
+
+var KEY = fs.readFileSync('certs/client.key');
+var CERT = fs.readFileSync('certs/client.crt');
+var CAfile = [fs.readFileSync('certs/all-ca.crt')];
+
+var options = {
+	host: 'mqttserver',
+	port: 8883,
+	protocol: 'mqtts',
+	protocolId: 'MQIsdp',
+	ca: CAfile,
+	key: KEY,
+	cert: CERT,
+	secureProtocol: 'TLSv1_2_method',
+	protocolId: 'MQIsdp',
+	protocolVersion: 3,
+	rejectUnauthorized: false
+};
+
+var client = mqtt.connect(options);
+client.on('connect', function() { // When connected
+    console.log('connected');
+});
 
 const peripheralAdress = "30:ae:a4:20:14:aa";
 //If name filtering is required
@@ -41,12 +64,10 @@ noble.on('discover', function(peripheral) {
       //batteryService.discoverCharacteristics(['2a19'], function(error, characteristics) {
         var batteryLevelCharacteristic = characteristics[0];
         console.log('discovered sensor value characteristic');
-
         batteryLevelCharacteristic.on('data', function(data, isNotification) {
 		console.log(data.toString('utf8'));
 		client.publish(sensorDataTopic, data.toString('utf8'));
         });
-
         // to enable notify
         batteryLevelCharacteristic.subscribe(function(error) {
           console.log('sensor value notification on');
