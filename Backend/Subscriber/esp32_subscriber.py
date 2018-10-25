@@ -5,7 +5,7 @@ import json
 import ast
 from elasticsearch import Elasticsearch
  
-es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+es = Elasticsearch([{'host': '10.0.1.168', 'port': 9200}])
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
@@ -33,7 +33,7 @@ def on_message(client, userdata, message):
 
 Connected = False   #global variable for the state of the connection
  
-broker_address= "localhost"  #Broker address
+broker_address= "10.0.1.168"  #Broker address
 port = 1883                         #Broker port
  
 client = mqttClient.Client("seecat_broker")               #create new instance
