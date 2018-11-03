@@ -1,14 +1,14 @@
 var noble = require('noble');
 const mqtt = require ('mqtt');
 
-var options = {host:'localhost', port:11883};
+var options = {host:'iot.eclipse.org', port:1883};
 var client = mqtt.connect(options);
 
 client.on('connect', function() { // When connected
     console.log('connected');
 });
 
-const peripheralAdress = "30:ae:a4:20:14:aa";
+const peripheralAddress = "XX:XX:XX:XX:XX:XX"; //ESP32 address
 //If name filtering is required
 const peripheralName = "SeeCat03";
 const sensorDataTopic = "deviceID/SeeCat03/sensorData";
@@ -33,7 +33,7 @@ noble.on('scanStop', function () {
 
 
 noble.on('discover', function(peripheral) {
-  if (peripheral.advertisement.localName == peripheralName || peripheral.address == peripheralAdress ) 
+  if (peripheral.advertisement.localName == peripheralName || peripheral.address == peripheralAddress ) 
 	{
 	console.log(peripheral.address);
 	console.log(peripheral.localName);

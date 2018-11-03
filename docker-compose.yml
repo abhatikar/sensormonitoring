@@ -1,0 +1,14 @@
+version: '2'
+services:
+  subscriber:
+    image: subscriber
+    container_name: subscriber_mqtt
+    build: ./Subscriber
+    restart: always
+  web:
+    image: backend
+    container_name: backend_api
+    build: ./Backend
+    restart: always
+    ports:
+      - 5000:5000

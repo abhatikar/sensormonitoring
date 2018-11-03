@@ -10,7 +10,7 @@ from elasticsearch import Elasticsearch
 import dateutil.parser as dp
 
  
-es = Elasticsearch([{'host': '10.0.1.168', 'port': 9200}])
+es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 
 app = Flask(__name__)
 api = Api(app)
@@ -50,8 +50,8 @@ class SensorDataDate(Resource):
 		print(len(final_obj))
 		return final_obj
 
-api.add_resource(SensorData, '/sensordata/<start_idx>') # Route_1
-api.add_resource(SensorDataDate, '/sensordata/<start_date>/<end_date>') # Route_2
+api.add_resource(SensorData, '/api/sensordata/<start_idx>') # Route_1
+api.add_resource(SensorDataDate, '/api/sensordata/<start_date>/<end_date>') # Route_2
 
 if __name__ == '__main__':
      app.run(host='0.0.0.0', port=5000)

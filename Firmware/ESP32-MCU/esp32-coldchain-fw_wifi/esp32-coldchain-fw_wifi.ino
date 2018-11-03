@@ -20,7 +20,7 @@ NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3600, 60000);
 
 //const char* ssid = "AP_ID";
 //const char* password =  "passwd";
-const char* mqtt_server = "172.20.10.3";
+const char* mqtt_server = "iot.eclipse.org";
 
 const char* deviceID = "SeeCat02";
 const char* sensorDataTopic = "deviceID/SeeCat02/sensorData";
