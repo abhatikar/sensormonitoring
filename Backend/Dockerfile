@@ -7,7 +7,6 @@ RUN apt-get install -y build-essential mosquitto-clients  curl
 # update pip
 RUN pip3 install pip --upgrade
 RUN pip3 install paho-mqtt python-dateutil flask flask_restful requests elasticsearch
-RUN git clone -b development_2 git clone https://github.com/abhatikar/sensormonitoring.git
-RUN ls sensormonitoring/Backend
+COPY backend.py .
 EXPOSE 5000
-CMD python3 sensormonitoring/Backend/backend.py
+CMD python3 backend.py
