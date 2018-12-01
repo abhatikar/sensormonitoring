@@ -1,0 +1,8 @@
+1) SD card support for offline logs
+2) Height detection
+3) OTA using IOTappstory
+4) IoT edge support
+5) AWS Greengrass support
+6) Azure DPS support
+7) TSI support
+8) Stream processor code for MQTT data
