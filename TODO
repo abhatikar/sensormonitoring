@@ -6,3 +6,5 @@
 6) Azure DPS support
 7) TSI support
 8) Stream processor code for MQTT data
+9) Docker networks and separate out DB server from compose
+10) configuration server
