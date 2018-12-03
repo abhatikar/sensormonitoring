@@ -8,7 +8,7 @@
 
 
 Adafruit_BME680 bme; // I2C
-const char* deviceID = "SeeCat04";
+const char* deviceID = "SeeCat07";
 
 BLEAdvertisementData advert;
 BLEAdvertising *pAdvertising;
@@ -89,7 +89,7 @@ void setup() {
 
   BLEDevice::init(deviceID);
   BLEServer *pServer = BLEDevice::createServer();
-
+  Serial.println(BLEDevice::getAddress().toString().c_str());
   pAdvertising = pServer->getAdvertising();
   advert.setName(deviceID);
   pAdvertising->setAdvertisementData(advert);

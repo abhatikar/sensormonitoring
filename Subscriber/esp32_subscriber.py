@@ -47,7 +47,7 @@ client.on_subscribe = on_subscribe
 
 Connected = False   #global variable for the state of the connection
 
-client.connect('iot.eclipse.org', 1883, 60)
+client.connect('localhost', 1883, 60)
 
 #while Connected != True:    #Wait for connection
 #    time.sleep(0.1)
