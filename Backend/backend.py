@@ -10,7 +10,7 @@ from elasticsearch import Elasticsearch
 import dateutil.parser as dp
 
  
-es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+es = Elasticsearch([{'host': 'dbserver', 'port': 9200}])
 
 app = Flask(__name__)
 api = Api(app)

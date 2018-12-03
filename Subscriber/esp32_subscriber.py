@@ -5,7 +5,7 @@ import json
 import ast
 from elasticsearch import Elasticsearch
 
-es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+es = Elasticsearch([{'host': 'dbserver', 'port': 9200}])
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
@@ -47,7 +47,7 @@ client.on_subscribe = on_subscribe
 
 Connected = False   #global variable for the state of the connection
 
-client.connect('localhost', 1883, 60)
+client.connect('mqttbroker', 1883, 60)
 
 #while Connected != True:    #Wait for connection
 #    time.sleep(0.1)

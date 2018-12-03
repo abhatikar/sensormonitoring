@@ -1,5 +1,15 @@
 version: '2'
 services:
+  broker:
+    image: eclipse-mosquitto
+    container_name: broker_mqtt
+    ports:
+      - 1883:1883
+    restart: always
+    networks:
+            default:
+                    aliases:
+                            - mqttbroker
   subscriber:
     image: subscriber
     container_name: subscriber_mqtt
@@ -12,3 +22,13 @@ services:
     restart: always
     ports:
       - 5000:5000
+  elk:
+    image: sebp/elk
+    networks:
+            default:
+                    aliases:
+                            - dbserver
+    ports:
+      - 5601:5601
+      - 9200:9200
+      - 5044:5044
