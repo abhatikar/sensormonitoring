@@ -33,6 +33,46 @@ def on_message(client, userdata, message):
 	client.publish('sensorData/update', 'data updated' ,0)
 	#print(tt);
 
+def myfunction_test(listener=None):
+    '''handling functions'''
+    def do_work(data):
+	print(data);
+        if listener is not None:
+            listener('Hello123')
+        return data
+    return do_work
+
+def stream_processor():
+    state = []
+    subscriptions = []
+    def process_stream(client, userdata, message):
+        nonlocal state
+        stream_message = json.loads(message.payload.decode('utf-8'))
+        print(stream_message)
+        if len(state) < 5:
+            state = [*state, stream_message]
+        else:
+            state = [*state[1:], stream_message]
+            for subscriber in subscriptions:
+                subscriber(state)
+    def subscribe(fn):
+        def unsubscribe():
+            subscriptions.remove(fn)
+        subscriptions.append(fn)
+        return unsubscribe
+    return process_stream, subscribe
+
+def log_event_data(*args, **kwargs):
+    print('Event Data:', *args, **kwargs)
+
+def prediction_listener(prediction):
+    print('listened prediction:', prediction)
+    client.publish('predictionData/update', json.dumps(prediction), 0)
+
+process_stream, subscribe_sensor = stream_processor()
+subscribe_sensor(myfunction_test(listener=prediction_listener))
+subscribe_sensor(log_event_data)
+
 def on_subscribe(client, userdata, mid, granted_qos):
     print('Subscribed: ' + str(mid) + ' ' + str(granted_qos))
 
