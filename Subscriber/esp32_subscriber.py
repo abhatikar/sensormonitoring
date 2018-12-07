@@ -22,11 +22,12 @@ def on_message(client, userdata, message):
 	dbdata['deviceValue'] = data['temperature'];
 	dbdata['deviceParameter'] = 'Temperature';
 	dbdata['deviceId'] = data['deviceId'];
-	dbdata['@timestamp'] = int(str(time.time()).split('.')[0]) * 1000;
+	dbdata['@timestamp'] = data[timeStamp] * 1000;
 	print(dbdata);
 	tt=es.index(index='sensordata', doc_type='readings', body=dbdata);
 	dbdata['deviceValue'] = data['humidity'];
 	dbdata['deviceParameter'] = 'Humidity';
+	dbdata['@timestamp'] = data[timeStamp] * 1000;
 	tt=es.index(index='sensordata', doc_type='readings', body=dbdata);
 	print(dbdata);
 	client.publish('sensorData/update', 'data updated' ,0)

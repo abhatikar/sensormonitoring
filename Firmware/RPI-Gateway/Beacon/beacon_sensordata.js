@@ -45,7 +45,8 @@ noble.on('discover', function(peripheral) {
 	var sensordata = {
 	    temperature: readings[0],
 	    humidity: readings[1],
-	    deviceId: deviceID
+	    deviceId: deviceID,
+	    timeStamp: Date.now()
 	}
 	console.log(sensordata);
 
