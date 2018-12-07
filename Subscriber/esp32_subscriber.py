@@ -35,10 +35,12 @@ def on_message(client, userdata, message):
 
 def myfunction_test(listener=None):
     '''handling functions'''
+
     def do_work(data):
-	print(data);
+        print(type(data));
+        print(len(data));
         if listener is not None:
-            listener('Hello123')
+            listener('data updated')
         return data
     return do_work
 
@@ -51,8 +53,8 @@ def stream_processor():
         print(stream_message)
         if len(state) < 5:
             state = [*state, stream_message]
-        else:
-            state = [*state[1:], stream_message]
+        elif len(state) == 5:
+            state = []
             for subscriber in subscriptions:
                 subscriber(state)
     def subscribe(fn):
@@ -67,11 +69,12 @@ def log_event_data(*args, **kwargs):
 
 def prediction_listener(prediction):
     print('listened prediction:', prediction)
-    client.publish('predictionData/update', json.dumps(prediction), 0)
+    #client.publish('sensorData/update', json.dumps(prediction), 0)
+    client.publish('sensorData/update', prediction, 0)
 
 process_stream, subscribe_sensor = stream_processor()
 subscribe_sensor(myfunction_test(listener=prediction_listener))
-subscribe_sensor(log_event_data)
+#subscribe_sensor(log_event_data)
 
 def on_subscribe(client, userdata, mid, granted_qos):
     print('Subscribed: ' + str(mid) + ' ' + str(granted_qos))
@@ -79,8 +82,9 @@ def on_subscribe(client, userdata, mid, granted_qos):
 def on_log(mqttc, userdata, level, string):
     print(string)
 
-client = mqtt.Client()
-client.on_message = on_message
+client = mqtt.Client(clean_session=True)
+#client.on_message = on_message
+client.on_message = process_stream
 client.on_connect = on_connect
 client.on_subscribe = on_subscribe
 #Uncomment to enable debug messages

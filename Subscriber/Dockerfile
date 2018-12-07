@@ -8,4 +8,5 @@ RUN apt-get install -y build-essential mosquitto-clients curl
 RUN pip3 install pip --upgrade
 RUN pip3 install paho-mqtt python-dateutil flask flask_restful requests elasticsearch
 COPY esp32_subscriber.py .
+#CMD python3 -m http.server
 CMD python3 esp32_subscriber.py

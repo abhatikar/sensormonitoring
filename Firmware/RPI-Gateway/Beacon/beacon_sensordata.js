@@ -1,7 +1,7 @@
 var noble = require('noble');
 const mqtt = require ('mqtt');
 
-var options = {host:'192.168.43.129', port:1883};
+var options = {host:'192.168.43.129', port:1883, clean: true};
 var client = mqtt.connect(options);
 
 client.on('connect', function() { // When connected
