@@ -10,7 +10,12 @@ services:
       - 5601:5601
       - 9200:9200
       - 5044:5044
+    environment:
+      - LOGSTASH_START=0
+        # - ELASTICSEARCH_START=0
+        #- KIBANA_START=0
 networks:        
         default:
                 external:
                         name: sensormonitor_network
+
