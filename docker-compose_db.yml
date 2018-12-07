@@ -1,0 +1,16 @@
+version: '3.6'
+services:
+  elk:
+    image: sebp/elk
+    networks:
+            default:
+                    aliases:
+                            - dbserver
+    ports:
+      - 5601:5601
+      - 9200:9200
+      - 5044:5044
+networks:        
+        default:
+                external:
+                        name: sensormonitor_network

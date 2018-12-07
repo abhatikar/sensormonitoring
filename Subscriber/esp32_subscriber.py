@@ -38,7 +38,7 @@ def on_subscribe(client, userdata, mid, granted_qos):
 def on_log(mqttc, userdata, level, string):
     print(string)
 
-client = mqtt.Client('seecat_broker')
+client = mqtt.Client()
 client.on_message = on_message
 client.on_connect = on_connect
 client.on_subscribe = on_subscribe

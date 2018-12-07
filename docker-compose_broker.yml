@@ -1,0 +1,16 @@
+version: '3.6'
+services:
+  broker:
+    image: eclipse-mosquitto
+    container_name: broker_mqtt
+    ports:
+      - 1883:1883
+    restart: always
+    networks:
+            default:
+                    aliases:
+                            - mqttbroker
+networks:        
+        default:
+                external:
+                        name: sensormonitor_network
