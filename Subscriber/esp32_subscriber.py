@@ -4,6 +4,7 @@ import requests
 import json
 import ast
 from elasticsearch import Elasticsearch
+from elasticsearch.helpers import bulk
 
 es = Elasticsearch([{'host': 'dbserver', 'port': 9200}])
 
@@ -22,12 +23,12 @@ def on_message(client, userdata, message):
 	dbdata['deviceValue'] = data['temperature'];
 	dbdata['deviceParameter'] = 'Temperature';
 	dbdata['deviceId'] = data['deviceId'];
-	dbdata['@timestamp'] = data[timeStamp] * 1000;
+	dbdata['@timestamp'] = data['timeStamp'] * 1000;
 	print(dbdata);
 	tt=es.index(index='sensordata', doc_type='readings', body=dbdata);
 	dbdata['deviceValue'] = data['humidity'];
 	dbdata['deviceParameter'] = 'Humidity';
-	dbdata['@timestamp'] = data[timeStamp] * 1000;
+	dbdata['@timestamp'] = data['timeStamp'] * 1000;
 	tt=es.index(index='sensordata', doc_type='readings', body=dbdata);
 	print(dbdata);
 	client.publish('sensorData/update', 'data updated' ,0)
@@ -35,10 +36,32 @@ def on_message(client, userdata, message):
 
 def myfunction_test(listener=None):
     '''handling functions'''
-
     def do_work(data):
-        print(type(data));
-        print(len(data));
+        list1 = []
+        print(data)
+        print(len(data))
+        for message in data:
+            print(message)
+            sen_data=json.loads(message);
+            print(sen_data)
+            dbdata = {}
+            dbdata['deviceValue'] = data['humidity'];
+            dbdata['deviceParameter'] = 'Humidity';
+            dbdata['deviceId'] = data['deviceId'];
+            dbdata['@timestamp'] = data['timeStamp'] * 1000;
+            #print(dbdata);
+            list1.append(dbdata);
+            dbdata = {}
+            dbdata['deviceValue'] = data['temperature'];
+            dbdata['deviceParameter'] = 'Temperature';
+            dbdata['deviceId'] = data['deviceId'];
+            dbdata['@timestamp'] = data['timeStamp'] * 1000;
+            #print(dbdata);
+            list1.append(dbdata);
+        print(list1)
+        #success, _ = bulk(es, list1, index='sensordata', doc_type='readings')
+        #print(success);
+        #print(_);
         if listener is not None:
             listener('data updated')
         return data
@@ -54,9 +77,9 @@ def stream_processor():
         if len(state) < 5:
             state = [*state, stream_message]
         elif len(state) == 5:
-            state = []
             for subscriber in subscriptions:
                 subscriber(state)
+            state = []
     def subscribe(fn):
         def unsubscribe():
             subscriptions.remove(fn)
