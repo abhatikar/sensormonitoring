@@ -21,10 +21,42 @@ noble.on('stateChange', function(state) {
   }
 });
 
+
+/*
+
+function log(message, data) {
+	  console.log(message + ' : ' + data)
+}
+
+noble.on('stateChange', function (data) { log('stateChange', data)});
+noble.on('addressChange', function (data) { log('addressChange', data)});
+noble.on('scanStart', function (data) { log('scanStart', data)});
+noble.on('scanStop', function (data) { log('scanStop', data)});
+noble.on('discover', function (data) { log('discover', data)});
+noble.on('connect', function (data) { log('connect', data)});
+noble.on('disconnect', function (data) { log('disconnect', data)});
+noble.on('rssiUpdate', function (data) { log('rssiUpdate', data)});
+noble.on('servicesDiscover', function (data) { log('servicesDiscover', data)});
+noble.on('includedServicesDiscover', function (data) { log('includedServicesDiscover', data)});
+noble.on('characteristicsDiscover', function (data) { log('characteristicsDiscover', data)});
+noble.on('read', function (data) { log('read', data)});
+noble.on('write', function (data) { log('write', data)});
+noble.on('broadcast', function (data) { log('broadcast', data)});
+noble.on('notify', function (data) { log('notify', data)});
+noble.on('descriptorsDiscover', function (data) { log('descriptorsDiscover', data)});
+noble.on('valueRead', function (data) { log('valueRead', data)});
+noble.on('valueWrite', function (data) { log('valueWrite', data)});
+noble.on('handleRead', function (data) { log('handleRead', data)});
+noble.on('handleWrite', function (data) { log('handleWrite', data)});
+noble.on('handleNotify', function (data) { log('handleNotify', data)});
+*/
+
 noble.on('discover', function(peripheral) {
   if (peripheral.address === peripheralAddress) {
     noble.stopScanning();
+
     var deviceID = 0;
+
     const timeoutObj = setTimeout(() => {
 	  console.log('WatchDog timeout hit beyond time');
     }, 20000);
@@ -51,13 +83,17 @@ noble.on('discover', function(peripheral) {
 	console.log(sensordata);
 
 	if(deviceID !== 0) {
-		client.publish(sensorDataTopic, JSON.stringify(sensordata));
+		var pub_options = {
+			qos:1
+		};
+		console.log('data published')
+		client.publish(sensorDataTopic, JSON.stringify(sensordata), pub_options);
 		clearTimeout(timeoutObj);
 	}
     }
+
     console.log();
 
     noble.startScanning();
-
   }
 });
